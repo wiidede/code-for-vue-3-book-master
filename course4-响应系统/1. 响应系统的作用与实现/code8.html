@@ -60,7 +60,7 @@ function effect(fn) {
     // 当调用 effect 注册副作用函数时，将副作用函数复制给 activeEffect
     activeEffect = effectFn
     // 在调用副作用函数之前将当前副作用函数压栈
-    effectStack.push(effectFn)
+    effectStack.push(effectFn) // 允许嵌套调用
     fn()
     // 在当前副作用函数执行完毕后，将当前副作用函数弹出栈，并还原 activeEffect 为之前的值
     effectStack.pop()

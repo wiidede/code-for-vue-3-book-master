@@ -52,7 +52,7 @@ function trigger(target, key) {
   })
   effectsToRun.forEach(effectFn => {
     if (effectFn.options.scheduler) {
-      effectFn.options.scheduler(effectFn)
+      effectFn.options.scheduler(effectFn) // 使用用户的调度器
     } else {
       effectFn()
     }
@@ -98,7 +98,7 @@ function cleanup(effectFn) {
 
 // =========================
 
-const jobQueue = new Set()
+const jobQueue = new Set() // 异步队列 Set
 const p = Promise.resolve()
 
 let isFlushing = false
@@ -106,7 +106,7 @@ function flushJob() {
   if (isFlushing) return
   isFlushing = true
   p.then(() => {
-    jobQueue.forEach(job => job())
+    jobQueue.forEach(job => job()) // 下一次调用
   }).finally(() => {
     isFlushing = false
   })
@@ -117,8 +117,8 @@ effect(() => {
   console.log(obj.foo)
 }, {
   scheduler(fn) {
-    jobQueue.add(fn)
-    flushJob()
+    jobQueue.add(fn) // 将所有的副作用函数放入异步队列中
+    flushJob() // 马上调用刷新，放入微任务队列中
   }
 })
 

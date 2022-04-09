@@ -45,7 +45,7 @@ function trigger(target, key) {
 
   const effectsToRun = new Set()
   effects && effects.forEach(effectFn => {
-    if (effectFn !== activeEffect) {
+    if (effectFn !== activeEffect) {  // 避免无限循环
       effectsToRun.add(effectFn)
     }
   })

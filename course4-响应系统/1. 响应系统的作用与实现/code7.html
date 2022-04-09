@@ -35,6 +35,8 @@ function track(target, key) {
     depsMap.set(key, (deps = new Set()))
   }
   deps.add(activeEffect)
+  // 同时往 activeEffect.deps 中推入当前的 deps
+  // 实现 双向收集依赖
   activeEffect.deps.push(deps)
 }
 
@@ -44,6 +46,7 @@ function trigger(target, key) {
   const effects = depsMap.get(key)
 
   const effectsToRun = new Set()
+  // 建立 副本，防止 Set 被无限遍历
   effects && effects.forEach(effectFn => effectsToRun.add(effectFn))
   effectsToRun.forEach(effectFn => effectFn())
   // effects && effects.forEach(effectFn => effectFn())
@@ -53,6 +56,7 @@ function trigger(target, key) {
 let activeEffect
 function effect(fn) {
   const effectFn = () => {
+    // 每次执行副作用函数之前，清理副作用函数对应的依赖
     cleanup(effectFn)
     // 当调用 effect 注册副作用函数时，将副作用函数复制给 activeEffect
     activeEffect = effectFn

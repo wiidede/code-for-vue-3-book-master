@@ -72,7 +72,7 @@ function effect(fn, options = {}) {
     activeEffect = effectFn
     // 在调用副作用函数之前将当前副作用函数压栈
     effectStack.push(effectFn)
-    const res = fn()
+    const res = fn() // 将副作用函数结果返回出去
     // 在当前副作用函数执行完毕后，将当前副作用函数弹出栈，并还原 activeEffect 为之前的值
     effectStack.pop()
     activeEffect = effectStack[effectStack.length - 1]
@@ -84,11 +84,11 @@ function effect(fn, options = {}) {
   // activeEffect.deps 用来存储所有与该副作用函数相关的依赖集合
   effectFn.deps = []
   // 执行副作用函数
-  if (!options.lazy) {
+  if (!options.lazy) { // 如果配置了 lazy 则不执行
     effectFn()
   }
 
-  return effectFn
+  return effectFn // 返回 effectFn 这样在懒执行的时候就可以拿到副作用函数，自己控制什么时候执行
 }
 
 function cleanup(effectFn) {
@@ -117,7 +117,7 @@ function computed(getter) {
       }
     }
   })
-  
+
   const obj = {
     get value() {
       if (dirty) {
